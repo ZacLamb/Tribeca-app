@@ -1,0 +1,96 @@
+{
+  "_readme": [
+    "Map each template key to where its value lives on the GHL contact.",
+    "Three accepted forms:",
+    "  \"AbC123...\"                        -> a GHL custom field ID",
+    "  \"std:companyName\"                  -> a standard contact property",
+    "  { \"source\": \"AbC123...\", \"format\": \"money\" }  -> with a formatter",
+    "Formatters: raw (default), money, date, phone, ssn, ein, percent, yesno.",
+    "Leave a source as \"\" to render that box blank on the PDF.",
+    "Hit GET /debug/fields?key=YOUR_WEBHOOK_SECRET on the deployed service to",
+    "dump every custom field id + name + fieldKey for this location."
+  ],
+
+  "trigger": {
+    "fieldId": "REPLACE_WITH_CREATE_APP_FIELD_ID",
+    "activeValues": ["Yes", "yes", "true", "Create"],
+    "clearTo": ""
+  },
+
+  "output": {
+    "fileFieldId": "Tbq51b5psdjfzrq8GLLv",
+    "filenamePrefix": "NYTG-Application",
+    "generatedAtFieldId": ""
+  },
+
+  "fields": {
+    "legal_business_name": { "source": "std:companyName" },
+    "dba_name": "",
+    "business_phone": { "source": "std:phone", "format": "phone" },
+    "business_start_date": { "source": "", "format": "date" },
+    "nature_of_business": "",
+    "advance_amount": { "source": "", "format": "money" },
+    "business_address": "",
+    "style_of_business": "",
+    "tax_id": { "source": "", "format": "ein" },
+    "state_incorporated": "",
+    "reason_for_funding": "",
+
+    "open_liens": { "source": "", "format": "yesno" },
+    "ever_defaulted": { "source": "", "format": "yesno" },
+    "ever_bankruptcy": { "source": "", "format": "yesno" },
+    "bankruptcy_status": "",
+    "bankruptcy_year": "",
+
+    "owns_property": { "source": "", "format": "yesno" },
+    "property_1_address": "",
+    "property_1_year_acquired": "",
+    "property_1_purchase_price": { "source": "", "format": "money" },
+    "property_1_current_value": { "source": "", "format": "money" },
+    "property_1_loan_balance": { "source": "", "format": "money" },
+    "property_1_lender": "",
+    "property_1_title_holder": "",
+    "property_2_address": "",
+    "property_2_year_acquired": "",
+    "property_2_purchase_price": { "source": "", "format": "money" },
+    "property_2_current_value": { "source": "", "format": "money" },
+    "property_2_loan_balance": { "source": "", "format": "money" },
+    "property_2_lender": "",
+    "property_2_title_holder": "",
+
+    "has_advance": { "source": "", "format": "yesno" },
+    "current_balance_total": { "source": "", "format": "money" },
+    "position_1_company": "",
+    "position_1_balance": { "source": "", "format": "money" },
+    "position_2_company": "",
+    "position_2_balance": { "source": "", "format": "money" },
+    "position_3_company": "",
+    "position_3_balance": { "source": "", "format": "money" },
+    "position_4_company": "",
+    "position_4_balance": { "source": "", "format": "money" },
+
+    "owner_1_name": { "source": "std:contactName" },
+    "owner_1_fico": "",
+    "owner_1_ownership": { "source": "", "format": "percent" },
+    "owner_1_ssn": { "source": "", "format": "ssn" },
+    "owner_1_dob": { "source": "std:dateOfBirth", "format": "date" },
+    "owner_1_address": { "source": "std:address1" },
+    "owner_1_city": { "source": "std:city" },
+    "owner_1_state": { "source": "std:state" },
+    "owner_1_zip": { "source": "std:postalCode" },
+    "owner_1_phone": { "source": "std:phone", "format": "phone" },
+    "owner_1_email": { "source": "std:email" },
+
+    "owner_2_name": "",
+    "owner_2_fico": "",
+    "owner_2_ownership": { "source": "", "format": "percent" },
+    "owner_2_ssn": { "source": "", "format": "ssn" },
+    "owner_2_dob": { "source": "", "format": "date" },
+    "owner_2_address": "",
+    "owner_2_city": "",
+    "owner_2_state": "",
+    "owner_2_zip": "",
+    "owner_2_phone": { "source": "", "format": "phone" },
+    "owner_2_email": ""
+  }
+}

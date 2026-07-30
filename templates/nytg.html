@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @page { size: Letter; margin: 0.4in; }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: "Liberation Sans", Arial, Helvetica, sans-serif;
+    font-size: 8.2pt;
+    color: #000;
+    margin: 0;
+  }
+
+  /* ---- masthead ---- */
+  .brand { text-align: center; margin-bottom: 4px; }
+  .brand img { height: 46px; }
+  .brand .wordmark {
+    font-family: "Liberation Serif", Georgia, serif;
+    font-size: 24pt;
+    letter-spacing: 0.5px;
+  }
+  .contactbar {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Liberation Serif", Georgia, serif;
+    font-size: 8.5pt;
+    margin: 2px 2px 8px 2px;
+  }
+  .contactbar div { line-height: 1.35; }
+  .contactbar .mid { text-align: center; }
+  .contactbar .right { text-align: right; }
+
+  /* ---- section shells ---- */
+  table.sec {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1.2px solid #000;
+    margin-bottom: 7px;
+    table-layout: fixed;
+  }
+  table.sec td, table.sec th { border: 1px solid #000; padding: 0; vertical-align: top; }
+
+  th.bar {
+    background: #7CAEBD;
+    text-align: center;
+    font-size: 9pt;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+    padding: 2px 0;
+  }
+
+  /* ---- a labelled field cell ---- */
+  .f { padding: 0; }
+  .f .lbl {
+    font-weight: bold;
+    padding: 2px 4px 1px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .f .val {
+    background: #DEEAF6;
+    min-height: 15px;
+    padding: 1px 4px 2px 4px;
+    font-weight: normal;
+    word-wrap: break-word;
+  }
+  .f.tall .val { min-height: 26px; }
+  .f .val.big { font-size: 9pt; }
+
+  /* inline label-left / value-right variant, used in the AM block */
+  .row { display: flex; }
+  .row .lbl { font-weight: bold; padding: 2px 4px; flex: 0 0 46%; }
+  .row .val { background: #DEEAF6; flex: 1 1 auto; padding: 2px 4px; min-height: 15px; }
+
+  .auth {
+    padding: 3px 5px;
+    font-size: 7pt;
+    line-height: 1.28;
+    text-align: justify;
+  }
+  .sig .val { min-height: 52px; }
+  .sig .lbl.italic { font-style: italic; font-weight: bold; }
+
+  .returnnote {
+    padding: 6px 8px;
+    text-align: center;
+    font-family: "Liberation Serif", Georgia, serif;
+    font-weight: bold;
+    font-size: 9.5pt;
+    line-height: 1.35;
+  }
+</style>
+</head>
+<body>
+
+  <div class="brand">
+    <span class="wordmark">New York Tribeca Group</span>
+  </div>
+
+  <div class="contactbar">
+    <div>
+      www.NYTribecaGroup.com<br />
+      Main: (866) 315-7715
+    </div>
+    <div class="mid">
+      40 Wall Street, Floor 43<br />
+      New York, NY 10005
+    </div>
+    <div class="right">
+      info@NYTribecaGroup.com<br />
+      Fax: (866) 331-6040
+    </div>
+  </div>
+
+  <!-- ============ BUSINESS INFORMATION ============ -->
+  <table class="sec">
+    <tr><th class="bar" colspan="4">BUSINESS INFORMATION</th></tr>
+    <tr>
+      <td class="f" colspan="2"><div class="lbl">Legal Business Name:</div><div class="val">{{legal_business_name}}</div></td>
+      <td class="f" colspan="2"><div class="lbl">DBA Name:</div><div class="val">{{dba_name}}</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">Business Phone Number:</div><div class="val">{{business_phone}}</div></td>
+      <td class="f"><div class="lbl">Business Start Date:</div><div class="val">{{business_start_date}}</div></td>
+      <td class="f"><div class="lbl">Nature of Business:</div><div class="val">{{nature_of_business}}</div></td>
+      <td class="f"><div class="lbl">Advance Amount Requested:</div><div class="val">{{advance_amount}}</div></td>
+    </tr>
+    <tr>
+      <td class="f" colspan="4"><div class="lbl">Business Address:</div><div class="val">{{business_address}}</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">Style of Business:</div><div class="val">{{style_of_business}}</div></td>
+      <td class="f"><div class="lbl">Tax ID Number:</div><div class="val">{{tax_id}}</div></td>
+      <td class="f"><div class="lbl">State Incorporated:</div><div class="val">{{state_incorporated}}</div></td>
+      <td class="f"><div class="lbl">Reason for Funding:</div><div class="val">{{reason_for_funding}}</div></td>
+    </tr>
+  </table>
+
+  <!-- ============ QUALIFYING QUESTIONS ============ -->
+  <table class="sec">
+    <tr><th class="bar" colspan="5">QUALIFYING QUESTIONS</th></tr>
+    <tr>
+      <td class="f"><div class="lbl">Any open Liens or Judgments?</div><div class="val">{{open_liens}}</div></td>
+      <td class="f"><div class="lbl">Did you ever default on a cash advance?</div><div class="val">{{ever_defaulted}}</div></td>
+      <td class="f"><div class="lbl">Ever file for bankruptcy?</div><div class="val">{{ever_bankruptcy}}</div></td>
+      <td class="f"><div class="lbl">If yes, What is the status?</div><div class="val">{{bankruptcy_status}}</div></td>
+      <td class="f"><div class="lbl">Bankruptcy year:</div><div class="val">{{bankruptcy_year}}</div></td>
+    </tr>
+  </table>
+
+  <!-- ============ EQUITY + MCA ============ -->
+  <table class="sec">
+    <tr>
+      <th class="bar" colspan="3">EQUITY ADVANCE INFO</th>
+      <th class="bar" colspan="2">MERCHANT CASH ADVANCE INFO</th>
+    </tr>
+    <tr>
+      <td class="f" colspan="3"><div class="lbl">Do you or your business own any commercial or residential property?</div><div class="val">{{owns_property}}</div></td>
+      <td class="f" colspan="2"><div class="lbl">Do you currently have a cash advance?</div><div class="val">{{has_advance}}</div></td>
+    </tr>
+    <tr>
+      <td class="f" colspan="3"><div class="lbl">(If yes) Property address</div><div class="val">{{property_1_address}}</div></td>
+      <td class="f" colspan="2"><div class="lbl">If yes, what is your current balance?</div><div class="val">{{current_balance_total}}</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">Year Acquired</div><div class="val">{{property_1_year_acquired}}</div></td>
+      <td class="f"><div class="lbl">Purchase Price</div><div class="val">{{property_1_purchase_price}}</div></td>
+      <td class="f"><div class="lbl">Current Value</div><div class="val">{{property_1_current_value}}</div></td>
+      <td class="f"><div class="lbl">Company</div><div class="val">&nbsp;</div></td>
+      <td class="f"><div class="lbl">Balance</div><div class="val">&nbsp;</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">Current Loan Balance</div><div class="val">{{property_1_loan_balance}}</div></td>
+      <td class="f"><div class="lbl">Lender</div><div class="val">{{property_1_lender}}</div></td>
+      <td class="f"><div class="lbl">Title Holder</div><div class="val">{{property_1_title_holder}}</div></td>
+      <td class="f"><div class="lbl">1.</div><div class="val">{{position_1_company}}</div></td>
+      <td class="f"><div class="lbl">&nbsp;</div><div class="val">{{position_1_balance}}</div></td>
+    </tr>
+    <tr>
+      <td class="f" colspan="3"><div class="lbl">Property address (2)</div><div class="val">{{property_2_address}}</div></td>
+      <td class="f"><div class="lbl">2.</div><div class="val">{{position_2_company}}</div></td>
+      <td class="f"><div class="lbl">&nbsp;</div><div class="val">{{position_2_balance}}</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">Year Acquired</div><div class="val">{{property_2_year_acquired}}</div></td>
+      <td class="f"><div class="lbl">Purchase Price</div><div class="val">{{property_2_purchase_price}}</div></td>
+      <td class="f"><div class="lbl">Current Value</div><div class="val">{{property_2_current_value}}</div></td>
+      <td class="f"><div class="lbl">3.</div><div class="val">{{position_3_company}}</div></td>
+      <td class="f"><div class="lbl">&nbsp;</div><div class="val">{{position_3_balance}}</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">Current Loan Balance</div><div class="val">{{property_2_loan_balance}}</div></td>
+      <td class="f"><div class="lbl">Lender</div><div class="val">{{property_2_lender}}</div></td>
+      <td class="f"><div class="lbl">Title Holder</div><div class="val">{{property_2_title_holder}}</div></td>
+      <td class="f"><div class="lbl">4.</div><div class="val">{{position_4_company}}</div></td>
+      <td class="f"><div class="lbl">&nbsp;</div><div class="val">{{position_4_balance}}</div></td>
+    </tr>
+  </table>
+
+  <!-- ============ OWNERS ============ -->
+  <table class="sec">
+    <tr><th class="bar" colspan="6">PERSONAL INFORMATION ON OWNERS, PARTNERS, PROPRIETORS, OR GUARANTOR</th></tr>
+    <tr>
+      <td class="f" colspan="2"><div class="lbl">Name</div><div class="val">{{owner_1_name}}</div></td>
+      <td class="f"><div class="lbl">FICO</div><div class="val">{{owner_1_fico}}</div></td>
+      <td class="f" colspan="2"><div class="lbl">Name</div><div class="val">{{owner_2_name}}</div></td>
+      <td class="f"><div class="lbl">FICO</div><div class="val">{{owner_2_fico}}</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">% of Ownership</div><div class="val">{{owner_1_ownership}}</div></td>
+      <td class="f"><div class="lbl">Social Security No.</div><div class="val">{{owner_1_ssn}}</div></td>
+      <td class="f"><div class="lbl">DOB</div><div class="val">{{owner_1_dob}}</div></td>
+      <td class="f"><div class="lbl">% of Ownership</div><div class="val">{{owner_2_ownership}}</div></td>
+      <td class="f"><div class="lbl">Social Security No.</div><div class="val">{{owner_2_ssn}}</div></td>
+      <td class="f"><div class="lbl">DOB</div><div class="val">{{owner_2_dob}}</div></td>
+    </tr>
+    <tr>
+      <td class="f" colspan="3"><div class="lbl">Address</div><div class="val">{{owner_1_address}}</div></td>
+      <td class="f" colspan="3"><div class="lbl">Address</div><div class="val">{{owner_2_address}}</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">City/Country</div><div class="val">{{owner_1_city}}</div></td>
+      <td class="f"><div class="lbl">State</div><div class="val">{{owner_1_state}}</div></td>
+      <td class="f"><div class="lbl">Zip</div><div class="val">{{owner_1_zip}}</div></td>
+      <td class="f"><div class="lbl">City/Country</div><div class="val">{{owner_2_city}}</div></td>
+      <td class="f"><div class="lbl">State</div><div class="val">{{owner_2_state}}</div></td>
+      <td class="f"><div class="lbl">Zip</div><div class="val">{{owner_2_zip}}</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl">Phone Number</div><div class="val">{{owner_1_phone}}</div></td>
+      <td class="f" colspan="2"><div class="lbl">Email Address</div><div class="val">{{owner_1_email}}</div></td>
+      <td class="f"><div class="lbl">Phone Number</div><div class="val">{{owner_2_phone}}</div></td>
+      <td class="f" colspan="2"><div class="lbl">Email Address</div><div class="val">{{owner_2_email}}</div></td>
+    </tr>
+  </table>
+
+  <!-- ============ AUTHORIZATION ============ -->
+  <table class="sec">
+    <tr><th class="bar" colspan="2">AUTHORIZATION</th></tr>
+    <tr>
+      <td class="auth" colspan="2">
+        Each of the undersigned, who is either a Principal, Sole Proprietor or Personal Guarantor of the above-named
+        business, recognizes that his or her individual credit history may be a factor in the evaluation of this
+        application of the above named business for funding. Each of the undersigned hereby authorizes NYTG and its
+        assigns and/or affiliate partners of NYTG to obtain his or her credit report (and any updates to his or her
+        credit report) in connection with NYTG consideration of this application and any affiliate partners of NYTG in
+        connection with any subsequent review of the account of the abovenamed business. Each of the undersigned hereby
+        authorizes NYTG to utilize information including but not limited to calls, emails, texts and direct mail for
+        marketing efforts from NYTG.
+      </td>
+    </tr>
+    <tr>
+      <td class="f sig"><div class="lbl">Partner, Proprietor or Guarantor</div><div class="val">&nbsp;</div></td>
+      <td class="f sig"><div class="lbl">Partner, Proprietor or Guarantor</div><div class="val">&nbsp;</div></td>
+    </tr>
+    <tr>
+      <td class="f"><div class="lbl italic">DATE</div><div class="val">&nbsp;</div></td>
+      <td class="f"><div class="lbl italic">DATE</div><div class="val">&nbsp;</div></td>
+    </tr>
+  </table>
+
+  <!-- ============ ACCOUNT MANAGER ============ -->
+  <table class="sec">
+    <tr><th class="bar" colspan="2">ACCOUNT MANAGERS INFORMATION</th></tr>
+    <tr>
+      <td class="returnnote" style="width:50%">
+        Please return this application with your past three months of business bank statements to your account manager
+        to complete your pre-approval process.<br />
+        Thank you for choosing New York Tribeca Group!
+      </td>
+      <td style="padding:0">
+        <div class="row" style="border-bottom:1px solid #000"><div class="lbl">Account Manager:</div><div class="val">{{am_name}}</div></div>
+        <div class="row" style="border-bottom:1px solid #000"><div class="lbl">Office Number:</div><div class="val">{{am_office}}</div></div>
+        <div class="row" style="border-bottom:1px solid #000"><div class="lbl">Cell Number:</div><div class="val">{{am_cell}}</div></div>
+        <div class="row"><div class="lbl">Email:</div><div class="val">{{am_email}}</div></div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

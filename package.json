@@ -1,0 +1,18 @@
+{
+  "name": "nytg-app-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Generates the New York Tribeca Group MCA application PDF from GHL contact fields and writes it back into a GHL file-upload custom field.",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "puppeteer": "^23.6.0"
+  }
+}
