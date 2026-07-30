@@ -23,7 +23,9 @@ function launch() {
 async function getBrowser() {
   if (!browserPromise) browserPromise = launch();
   let browser = await browserPromise;
-  if (!browser.connected) {
+  const alive =
+    typeof browser.connected === 'boolean' ? browser.connected : browser.isConnected?.() !== false;
+  if (!alive) {
     browserPromise = launch();
     browser = await browserPromise;
   }
@@ -77,14 +79,21 @@ async function renderPdf(templateName, data) {
   const browser = await getBrowser();
   const page = await browser.newPage();
   try {
-    await page.setContent(html, { waitUntil: 'domcontentloaded' });
+    page.setDefaultTimeout(30000);
+    await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.emulateMediaType('print');
-    return await page.pdf({
+    const out = await page.pdf({
       format: 'Letter',
       printBackground: true,
       preferCSSPageSize: true,
+      timeout: 30000,
       margin: { top: '0.4in', right: '0.4in', bottom: '0.4in', left: '0.4in' },
     });
+    // Puppeteer returns Uint8Array on some versions. Express JSON-serializes a
+    // Uint8Array instead of sending bytes, which fails silently — force Buffer.
+    const buf = Buffer.isBuffer(out) ? out : Buffer.from(out);
+    console.log(`[render] ${buf.length} bytes, header=${buf.slice(0, 5).toString('latin1')}`);
+    return buf;
   } finally {
     await page.close();
   }

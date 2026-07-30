@@ -160,10 +160,39 @@ app.get('/preview/:contactId', async (req, res) => {
   if (!authorized(req)) return res.status(401).json({ error: 'unauthorized' });
   try {
     const { pdf } = await generate(req.params.contactId, { force: true, deliver: false });
-    res.type('application/pdf').send(pdf);
+    const buf = Buffer.isBuffer(pdf) ? pdf : Buffer.from(pdf);
+    console.log(`[preview] ${req.params.contactId} -> ${buf.length} bytes`);
+    res.status(200);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Length', buf.length);
+    res.setHeader('Content-Disposition', 'inline; filename="preview.pdf"');
+    res.end(buf);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message, body: err.body });
+  }
+});
+
+// Render, then report on the bytes instead of sending them. If /preview shows
+// nothing, hit this — it proves whether a valid PDF was produced at all.
+app.get('/debug/render/:contactId', async (req, res) => {
+  if (!authorized(req)) return res.status(401).json({ error: 'unauthorized' });
+  try {
+    const t0 = Date.now();
+    const { pdf } = await generate(req.params.contactId, { force: true, deliver: false });
+    const buf = Buffer.isBuffer(pdf) ? pdf : Buffer.from(pdf);
+    res.json({
+      ok: true,
+      ms: Date.now() - t0,
+      bytes: buf.length,
+      isBuffer: Buffer.isBuffer(pdf),
+      ctor: pdf?.constructor?.name,
+      header: buf.slice(0, 8).toString('latin1'),
+      looksLikePdf: buf.slice(0, 4).toString('latin1') === '%PDF',
+    });
+  } catch (err) {
+    console.error('[debug/render]', err);
+    res.status(500).json({ error: err.message, stack: err.stack?.split('\n').slice(0, 5) });
   }
 });
 
