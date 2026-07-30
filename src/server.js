@@ -8,6 +8,17 @@ const { applySignatures } = require('./signature');
 const { contactFromPayload, directData } = require('./webhook');
 
 const app = express();
+// Browser-originated calls (a fetch from the GHL tab, a test page) send a
+// preflight OPTIONS because of the x-api-key header. Answer it.
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key, Authorization');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -151,6 +162,20 @@ app.post('/webhook/external', async (req, res) => {
     res.json(result);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ error: err.message, body: err.body });
+  }
+});
+
+// Full run from the address bar: renders AND uploads into contact.application.
+// Same work as the webhook, but triggerable without a POST client.
+app.get('/run/:contactId', async (req, res) => {
+  if (!authorized(req)) return res.status(401).json({ error: 'unauthorized' });
+  try {
+    const result = await generate(req.params.contactId, { force: true });
+    console.log(`[run] ${req.params.contactId}`, result);
+    res.json(result);
+  } catch (err) {
+    console.error('[run]', err);
     res.status(500).json({ error: err.message, body: err.body });
   }
 });
