@@ -19,7 +19,7 @@
   .brand img { height: 46px; }
   .brand .wordmark {
     font-family: "Liberation Serif", Georgia, serif;
-    font-size: 24pt;
+    font-size: 21pt;
     letter-spacing: 0.5px;
   }
   .contactbar {
@@ -57,8 +57,11 @@
   .f .lbl {
     font-weight: bold;
     padding: 2px 4px 1px 4px;
-    white-space: nowrap;
-    overflow: hidden;
+    /* Labels must wrap — the qualifying-question headings are long enough to
+       be silently clipped at these column widths otherwise. */
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.15;
   }
   .f .val {
     background: #DEEAF6;
@@ -120,6 +123,7 @@
   .returnnote {
     padding: 6px 8px;
     text-align: center;
+    text-align-last: center;
     font-family: "Liberation Serif", Georgia, serif;
     font-weight: bold;
     font-size: 9.5pt;
