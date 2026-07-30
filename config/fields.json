@@ -1,20 +1,20 @@
 {
   "_readme": [
-    "Map each template key to where its value lives on the GHL contact.",
-    "Three accepted forms:",
-    "  \"AbC123...\"                        -> a GHL custom field ID",
-    "  \"std:companyName\"                  -> a standard contact property",
-    "  { \"source\": \"AbC123...\", \"format\": \"money\" }  -> with a formatter",
-    "Formatters: raw (default), money, date, phone, ssn, ein, percent, yesno.",
-    "Leave a source as \"\" to render that box blank on the PDF.",
-    "Hit GET /debug/fields?key=YOUR_WEBHOOK_SECRET on the deployed service to",
-    "dump every custom field id + name + fieldKey for this location."
+    "Mapped against location JGJlHReeRyNcpVjNvFuV on 2026-07-30.",
+    "Entry forms:",
+    "  \"AbC123...\"                                  -> custom field id",
+    "  \"std:companyName\"                            -> standard contact property",
+    "  { source, format }                             -> formatted",
+    "  { source: [a,b], mode: \"first\" }             -> first non-empty wins",
+    "  { source: [a,b], mode: \"join\", join: \", \" } -> concatenated",
+    "Formatters: raw, money, date, phone, ssn, ein, percent, yesno.",
+    "Empty source = that box prints blank."
   ],
 
   "trigger": {
-    "fieldId": "REPLACE_WITH_CREATE_APP_FIELD_ID",
-    "activeValues": ["Yes", "yes", "true", "Create"],
-    "clearTo": ""
+    "fieldId": "RiFMqQjoOJXgSLB3mIQG",
+    "activeValues": ["yes", "true", "1", "checked", "on", "create app"],
+    "clearTo": []
   },
 
   "output": {
@@ -23,26 +23,55 @@
     "generatedAtFieldId": ""
   },
 
-  "fields": {
-    "legal_business_name": { "source": "std:companyName" },
-    "dba_name": "",
-    "business_phone": { "source": "std:phone", "format": "phone" },
-    "business_start_date": { "source": "", "format": "date" },
-    "nature_of_business": "",
-    "advance_amount": { "source": "", "format": "money" },
-    "business_address": "",
-    "style_of_business": "",
-    "tax_id": { "source": "", "format": "ein" },
-    "state_incorporated": "",
-    "reason_for_funding": "",
+  "signature": {
+    "_readme": [
+      "Both signature fields are GHL SIGNATURE type, which stores an image URL.",
+      "The image is fetched server-side and inlined, so mode auto will stamp the",
+      "real signature the merchant drew. requireConsent only matters for the",
+      "typed fallback when no signature image exists."
+    ],
+    "mode": "auto",
+    "requireConsent": true,
+    "owner1": {
+      "nameSource": "owner_1_name",
+      "imageFieldId": "XqNel8V8gW5a29bWPyRJ",
+      "consentFieldId": "8YtpkJeTBj87TOaPgIHF",
+      "signedAtFieldId": "KK1RJITmAgad6LS3Kfxo",
+      "consentSourceLabel": "Personal guarantee acknowledged"
+    },
+    "owner2": {
+      "nameSource": "owner_2_name",
+      "imageFieldId": "1eL7a5lnlVUAiasDpJQ7",
+      "consentFieldId": "8YtpkJeTBj87TOaPgIHF",
+      "signedAtFieldId": "NRB67ytuh5dfG3BqnJju",
+      "consentSourceLabel": "Personal guarantee acknowledged"
+    }
+  },
 
-    "open_liens": { "source": "", "format": "yesno" },
-    "ever_defaulted": { "source": "", "format": "yesno" },
-    "ever_bankruptcy": { "source": "", "format": "yesno" },
+  "fields": {
+    "legal_business_name": "std:companyName",
+    "dba_name": "ywgIycI2vpI1NeqgjlQi",
+    "business_phone": { "source": ["97DESYf3zqRaoCT3HaD5", "tDNV2s5o0lK5Rw1Tt506", "std:phone"], "mode": "first", "format": "phone" },
+    "business_start_date": { "source": "FZN9G4JHHQR23e69Xdvj", "format": "date" },
+    "nature_of_business": { "source": ["UydPOMtlVcL2gYujRlJL", "meX634cG2I0FpWUt54Ff"], "mode": "first" },
+    "advance_amount": { "source": "vkr9kJ5dLGjjUQ3HfMpR", "format": "money" },
+    "business_address": {
+      "source": ["yRHM3voy4m6sdMg2yvCo", "NUKx9OS8P0qfsfSetKSH", "ExE9icmVLLF6rwE2jsCj", "sCjCmL1uyRTcyQxyrQw8"],
+      "mode": "join",
+      "join": ", "
+    },
+    "style_of_business": { "source": ["yjeDl5hrGhBK0c42clvZ", "Hknp6p0uzqjFwW7y8Ocg"], "mode": "first" },
+    "tax_id": { "source": ["Y13E04xttSyES7aImqtW", "LNgxO2WlaixTo4mz0itB"], "mode": "first", "format": "ein" },
+    "state_incorporated": "ExE9icmVLLF6rwE2jsCj",
+    "reason_for_funding": { "source": ["CgoWo7YlI790uXhjoqaP", "oraHZgJTVbWdrwPKRdQW"], "mode": "first" },
+
+    "open_liens": { "source": "ZnOeeS2xCcyPi7X5FwYV", "format": "yesno" },
+    "ever_defaulted": { "source": "kyBDH5ErdXdBmBiRV0lb", "format": "yesno" },
+    "ever_bankruptcy": { "source": "HzMy8W2zbrcLcX2JLxTK", "format": "yesno" },
     "bankruptcy_status": "",
     "bankruptcy_year": "",
 
-    "owns_property": { "source": "", "format": "yesno" },
+    "owns_property": { "source": ["6Av6VJHlyMwulrYweYN8", "Mw2hiXRhGdiYNg2GnRXw"], "mode": "first" },
     "property_1_address": "",
     "property_1_year_acquired": "",
     "property_1_purchase_price": { "source": "", "format": "money" },
@@ -58,8 +87,8 @@
     "property_2_lender": "",
     "property_2_title_holder": "",
 
-    "has_advance": { "source": "", "format": "yesno" },
-    "current_balance_total": { "source": "", "format": "money" },
+    "has_advance": { "source": "QJzY2ALYpOl59QIbEqal", "format": "yesno" },
+    "current_balance_total": { "source": "dOtGWitvWEJ10SMK1D5h", "format": "money" },
     "position_1_company": "",
     "position_1_balance": { "source": "", "format": "money" },
     "position_2_company": "",
@@ -69,28 +98,28 @@
     "position_4_company": "",
     "position_4_balance": { "source": "", "format": "money" },
 
-    "owner_1_name": { "source": "std:contactName" },
-    "owner_1_fico": "",
-    "owner_1_ownership": { "source": "", "format": "percent" },
-    "owner_1_ssn": { "source": "", "format": "ssn" },
+    "owner_1_name": "std:fullName",
+    "owner_1_fico": { "source": ["WORoTOhMepwD60OPOXQa", "gWAfsejU0PAIsGMddM8X", "hUBPI1U8NSkij7HsTTZt"], "mode": "first" },
+    "owner_1_ownership": { "source": "KPZBV6iU7V90kjliHgSh", "format": "percent" },
+    "owner_1_ssn": { "source": "GVsovRJNHn4uQ1twEnKw", "format": "ssn" },
     "owner_1_dob": { "source": "std:dateOfBirth", "format": "date" },
-    "owner_1_address": { "source": "std:address1" },
-    "owner_1_city": { "source": "std:city" },
-    "owner_1_state": { "source": "std:state" },
-    "owner_1_zip": { "source": "std:postalCode" },
-    "owner_1_phone": { "source": "std:phone", "format": "phone" },
-    "owner_1_email": { "source": "std:email" },
+    "owner_1_address": { "source": ["CKf2Qg1Zjcy78KHJK6KB", "std:address1"], "mode": "first" },
+    "owner_1_city": "std:city",
+    "owner_1_state": "std:state",
+    "owner_1_zip": "std:postalCode",
+    "owner_1_phone": { "source": ["std:phone", "RNqyHddDD9I8wclkk6Ov"], "mode": "first", "format": "phone" },
+    "owner_1_email": "std:email",
 
-    "owner_2_name": "",
+    "owner_2_name": "w1gXDYOSjFd8cojlww4v",
     "owner_2_fico": "",
     "owner_2_ownership": { "source": "", "format": "percent" },
-    "owner_2_ssn": { "source": "", "format": "ssn" },
-    "owner_2_dob": { "source": "", "format": "date" },
-    "owner_2_address": "",
+    "owner_2_ssn": { "source": "TS8twtBNFV3tnMq6BUvy", "format": "ssn" },
+    "owner_2_dob": { "source": "VARd7o5oKLKvuaBgjbcN", "format": "date" },
+    "owner_2_address": "azfpfrjrMlhW4FW9eMxy",
     "owner_2_city": "",
     "owner_2_state": "",
     "owner_2_zip": "",
     "owner_2_phone": { "source": "", "format": "phone" },
-    "owner_2_email": ""
+    "owner_2_email": "xCUKxj3VNvMR2pvq7col"
   }
 }

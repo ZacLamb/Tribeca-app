@@ -78,7 +78,39 @@ GET https://<your-railway-domain>/debug/contact/<contactId>?key=<WEBHOOK_SECRET>
 Shows the raw contact next to the mapped template data — the fastest way to spot
 a wrong field ID.
 
-## 4. Wire the GHL workflow
+## 4. Signatures
+
+The signature and DATE boxes fill from `signature` in `config/fields.json`.
+
+| mode | behaviour |
+|---|---|
+| `image` | only stamps a signature the merchant actually drew or uploaded |
+| `typed` | renders their name in a script face plus an audit line |
+| `auto` | uses the image if one exists, otherwise falls back to typed |
+| `none` | leaves the boxes blank for a wet signature |
+
+`requireConsent` defaults to **true**: with no signature image and no consent
+record on the contact, the box prints blank and the log says why. That default
+exists because this block authorizes a credit pull — a name rendered in cursive
+on a contact who never agreed to sign electronically is a signature nobody made.
+Point `consentFieldId` at whatever your intake actually captures (the checkbox on
+your application form, the GHL survey consent field, a Documents & Contracts
+completion flag) and it fills automatically from then on.
+
+Best setup, in order of preference:
+
+1. **Signature widget on your intake form** → store the resulting image URL in a
+   contact field → set `owner1.imageFieldId` to it. The image is fetched
+   server-side and inlined, so nothing loads over the network mid-render.
+2. **Typed + consent checkbox** → set `consentFieldId` and
+   `consentSourceLabel` (e.g. `"Fundara intake form"`). Prints
+   `Electronically signed by NAME on DATE — Fundara intake form` under the mark.
+3. **Neither** → leave it blank, merchant signs by hand.
+
+`signedAtFieldId` is optional; without it the date is the render date. The typed
+face is Great Vibes (SIL OFL, bundled in `assets/fonts`) inlined as base64.
+
+## 5. Wire the GHL workflow
 
 1. Create a contact custom field `Create App`, type Dropdown, options `Yes`.
 2. New workflow → Trigger: **Contact Changed**, filter `Create App` `is` `Yes`.
@@ -97,7 +129,31 @@ times out webhooks long before Chromium finishes. It then clears `Create App`
 back to blank, which re-fires the trigger — that's what the trigger gate and the
 60-second dedupe are for.
 
-## 5. External callers
+## 6. Sending data through the webhook instead
+
+The webhook body can carry data directly, in two flavours.
+
+**Custom Data overrides (recommended).** In the GHL webhook action, add Custom
+Data pairs whose keys match the template keys:
+
+| Key | Value |
+|---|---|
+| `advance_amount` | `{{contact.requested_amount}}` |
+| `position_1_company` | `{{contact.position_1_company}}` |
+| `reason_for_funding` | `{{contact.use_of_funds}}` |
+
+Anything sent this way overrides whatever `config/fields.json` produced, so you
+can do the mapping in the GHL UI and leave the JSON alone. Merge tags that GHL
+can't resolve arrive as literal `{{...}}` and are discarded rather than printed.
+
+**Payload-only mode.** Send `"skipFetch": true` and the service builds the
+contact from the body instead of calling `GET /contacts`. Skips one API call,
+but you only get what GHL put in the body, the ID-keyed field map can't resolve
+(no IDs in a webhook payload), and signature images won't be fetched unless you
+pass `signature_1_image` yourself. The PIT is still required either way, since
+the upload back into `contact.application` is an API call regardless.
+
+## 7. External callers
 
 ```
 POST https://<your-railway-domain>/webhook/external

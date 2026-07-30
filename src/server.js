@@ -4,6 +4,8 @@ const express = require('express');
 const ghl = require('./ghl');
 const { buildTemplateData, fieldMap } = require('./map');
 const { renderPdf, closeBrowser, getBrowser } = require('./render');
+const { applySignatures } = require('./signature');
+const { contactFromPayload, directData } = require('./webhook');
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -69,14 +71,23 @@ function triggerIsActive(contact) {
 
 /* ---------------- core ---------------- */
 
-async function generate(contactId, { force = false, deliver = true } = {}) {
-  const contact = await ghl.getContact(contactId);
+async function generate(contactId, { force = false, deliver = true, payload = null } = {}) {
+  const overrides = payload ? directData(payload) : {};
+  const skipFetch = !!(payload && (payload.skipFetch === true || payload.skipFetch === 'true'));
 
-  if (!force && !triggerIsActive(contact)) {
+  // Payload-only mode never calls the API for the read; otherwise fetch as usual.
+  const contact = skipFetch ? contactFromPayload(payload) : await ghl.getContact(contactId);
+
+  if (!force && !skipFetch && !triggerIsActive(contact)) {
     return { skipped: 'trigger-field-not-set' };
   }
 
   const data = buildTemplateData(contact);
+  if (!skipFetch) await applySignatures(contact, data);
+
+  // Anything the webhook sent explicitly wins over the field map.
+  Object.assign(data, overrides);
+
   const pdf = await renderPdf(TEMPLATE, data);
 
   if (!deliver) return { pdf, data };
@@ -122,7 +133,7 @@ app.post('/webhook/create-app', async (req, res) => {
     return;
   }
   try {
-    const result = await generate(contactId);
+    const result = await generate(contactId, { payload: req.body });
     console.log(`[done] ${contactId}`, result);
   } catch (err) {
     console.error(`[fail] ${contactId}`, err.message);
@@ -136,7 +147,7 @@ app.post('/webhook/external', async (req, res) => {
   const contactId = extractContactId(req);
   if (!contactId) return res.status(400).json({ error: 'no contactId in payload' });
   try {
-    const result = await generate(contactId, { force: req.body.force !== false });
+    const result = await generate(contactId, { force: req.body.force !== false, payload: req.body });
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -179,7 +190,11 @@ app.get('/debug/contact/:contactId', async (req, res) => {
   if (!authorized(req)) return res.status(401).json({ error: 'unauthorized' });
   try {
     const contact = await ghl.getContact(req.params.contactId);
-    res.json({ mapped: buildTemplateData(contact), contact });
+    const mapped = buildTemplateData(contact);
+    await applySignatures(contact, mapped);
+    if (mapped.signature_1_image) mapped.signature_1_image = '<data uri omitted>';
+    if (mapped.signature_2_image) mapped.signature_2_image = '<data uri omitted>';
+    res.json({ mapped, contact });
   } catch (err) {
     res.status(500).json({ error: err.message, body: err.body });
   }

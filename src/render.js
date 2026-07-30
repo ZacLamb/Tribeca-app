@@ -32,6 +32,22 @@ async function getBrowser() {
 
 const templateCache = new Map();
 
+let signatureFontB64 = null;
+
+/** Read the script font once and inline it, so Chromium needs no network. */
+function getSignatureFont() {
+  if (signatureFontB64 === null) {
+    try {
+      const file = path.join(__dirname, '..', 'assets', 'fonts', 'GreatVibes-Regular.ttf');
+      signatureFontB64 = fs.readFileSync(file).toString('base64');
+    } catch (err) {
+      console.warn(`signature font missing, falling back to italic serif: ${err.message}`);
+      signatureFontB64 = '';
+    }
+  }
+  return signatureFontB64;
+}
+
 function loadTemplate(name) {
   if (process.env.NODE_ENV !== 'production' || !templateCache.has(name)) {
     const file = path.join(__dirname, '..', 'templates', `${name}.html`);
@@ -56,7 +72,8 @@ function interpolate(html, data) {
 }
 
 async function renderPdf(templateName, data) {
-  const html = interpolate(loadTemplate(templateName), data);
+  const withFont = { ...data, signature_font_data: getSignatureFont() };
+  const html = interpolate(loadTemplate(templateName), withFont);
   const browser = await getBrowser();
   const page = await browser.newPage();
   try {

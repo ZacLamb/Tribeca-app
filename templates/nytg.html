@@ -81,8 +81,41 @@
     line-height: 1.28;
     text-align: justify;
   }
-  .sig .val { min-height: 52px; }
+  .sig .val { min-height: 52px; position: relative; }
   .sig .lbl.italic { font-style: italic; font-weight: bold; }
+
+  /* ---- signatures ---- */
+  @font-face {
+    font-family: "SignatureScript";
+    src: url("data:font/truetype;charset=utf-8;base64,{{signature_font_data}}") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  .sigbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 52px;
+    padding: 2px 4px 1px 4px;
+  }
+  .sigmark { flex: 1 1 auto; display: flex; align-items: flex-end; overflow: hidden; }
+  .sigmark img { max-height: 40px; max-width: 96%; }
+  .sigmark img[src=""] { display: none; }
+  .sigscript {
+    font-family: "SignatureScript", "Liberation Serif", cursive;
+    font-size: 20pt;
+    line-height: 1.05;
+    padding-bottom: 1px;
+  }
+  .sigmeta {
+    font-size: 5.6pt;
+    color: #333;
+    border-top: 0.5px solid #9aa;
+    padding-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .sigmeta:empty { border-top: none; }
 
   .returnnote {
     padding: 6px 8px;
@@ -253,12 +286,34 @@
       </td>
     </tr>
     <tr>
-      <td class="f sig"><div class="lbl">Partner, Proprietor or Guarantor</div><div class="val">&nbsp;</div></td>
-      <td class="f sig"><div class="lbl">Partner, Proprietor or Guarantor</div><div class="val">&nbsp;</div></td>
+      <td class="f sig">
+        <div class="lbl">Partner, Proprietor or Guarantor</div>
+        <div class="val">
+          <div class="sigbox">
+            <div class="sigmark">
+              <img src="{{signature_1_image}}" alt="" />
+              <span class="sigscript">{{signature_1_typed}}</span>
+            </div>
+            <div class="sigmeta">{{signature_1_meta}}</div>
+          </div>
+        </div>
+      </td>
+      <td class="f sig">
+        <div class="lbl">Partner, Proprietor or Guarantor</div>
+        <div class="val">
+          <div class="sigbox">
+            <div class="sigmark">
+              <img src="{{signature_2_image}}" alt="" />
+              <span class="sigscript">{{signature_2_typed}}</span>
+            </div>
+            <div class="sigmeta">{{signature_2_meta}}</div>
+          </div>
+        </div>
+      </td>
     </tr>
     <tr>
-      <td class="f"><div class="lbl italic">DATE</div><div class="val">&nbsp;</div></td>
-      <td class="f"><div class="lbl italic">DATE</div><div class="val">&nbsp;</div></td>
+      <td class="f"><div class="lbl italic">DATE</div><div class="val">{{signature_1_date}}</div></td>
+      <td class="f"><div class="lbl italic">DATE</div><div class="val">{{signature_2_date}}</div></td>
     </tr>
   </table>
 

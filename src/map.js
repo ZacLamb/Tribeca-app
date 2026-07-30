@@ -66,6 +66,15 @@ function customFieldIndex(contact) {
 }
 
 function standardValue(contact, path) {
+  // GHL is inconsistent about contactName — sometimes present, often not.
+  // std:fullName always resolves to something usable.
+  if (path === 'fullName') {
+    return (
+      contact.contactName ||
+      [contact.firstName, contact.lastName].filter(Boolean).join(' ') ||
+      ''
+    );
+  }
   return path.split('.').reduce((acc, k) => (acc == null ? undefined : acc[k]), contact);
 }
 
@@ -75,24 +84,35 @@ function standardValue(contact, path) {
  *   "AbCdEf1234567890abcdef"        → custom field id
  *   "std:companyName"               → standard contact property
  *   { source: "...", format: "money" }
+ *   { source: ["a","b"], mode: "join", join: ", " }  → glue several together
+ *   { source: ["a","b"], mode: "first" }             → first non-empty wins
  */
 function buildTemplateData(contact) {
   const custom = customFieldIndex(contact);
   const out = {};
 
+  const resolve = (src) =>
+    src.startsWith('std:') ? standardValue(contact, src.slice(4)) : custom[src];
+
   for (const [key, entry] of Object.entries(fieldMap.fields || {})) {
     const spec = typeof entry === 'string' ? { source: entry } : entry || {};
+    const formatter = fmt[spec.format] || fmt.raw;
+
+    if (Array.isArray(spec.source)) {
+      const parts = spec.source.filter(Boolean).map((s) => fmt.raw(resolve(s)));
+      out[key] =
+        spec.mode === 'first'
+          ? formatter(parts.find((p) => p !== '') ?? '')
+          : parts.filter((p) => p !== '').join(spec.join ?? ', ');
+      continue;
+    }
+
     if (!spec.source) {
       out[key] = '';
       continue;
     }
 
-    const rawValue = spec.source.startsWith('std:')
-      ? standardValue(contact, spec.source.slice(4))
-      : custom[spec.source];
-
-    const formatter = fmt[spec.format] || fmt.raw;
-    out[key] = formatter(rawValue);
+    out[key] = formatter(resolve(spec.source));
   }
 
   // Composed / derived values used by the template
