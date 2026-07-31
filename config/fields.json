@@ -17,6 +17,15 @@
     "clearTo": []
   },
 
+  "blankFields": {
+    "_readme": [
+      "Forced blank after every other source is resolved — field map, standard",
+      "properties, and webhook Custom Data overrides alike. Nothing can put a",
+      "value in these boxes. Merchant contact details stay off the application."
+    ],
+    "keys": ["owner_1_phone", "owner_1_email", "owner_2_phone", "owner_2_email"]
+  },
+
   "output": {
     "fileFieldId": "Tbq51b5psdjfzrq8GLLv",
     "filenamePrefix": "NYTG-Application",
@@ -52,7 +61,7 @@
   "fields": {
     "legal_business_name": "std:companyName",
     "dba_name": "ywgIycI2vpI1NeqgjlQi",
-    "business_phone": { "source": ["97DESYf3zqRaoCT3HaD5", "tDNV2s5o0lK5Rw1Tt506", "std:phone"], "mode": "first", "format": "phone" },
+    "business_phone": { "source": ["97DESYf3zqRaoCT3HaD5", "tDNV2s5o0lK5Rw1Tt506"], "mode": "first", "format": "phone" },
     "business_start_date": { "source": "FZN9G4JHHQR23e69Xdvj", "format": "date" },
     "nature_of_business": { "source": ["UydPOMtlVcL2gYujRlJL", "meX634cG2I0FpWUt54Ff"], "mode": "first" },
     "advance_amount": { "source": "vkr9kJ5dLGjjUQ3HfMpR", "format": "money" },
@@ -108,8 +117,8 @@
     "owner_1_city": "std:city",
     "owner_1_state": "std:state",
     "owner_1_zip": "std:postalCode",
-    "owner_1_phone": { "source": ["std:phone", "RNqyHddDD9I8wclkk6Ov"], "mode": "first", "format": "phone" },
-    "owner_1_email": { "source": ["std:email", "mRQBl0SVsGL56KrsKhrB"], "mode": "first" },
+    "owner_1_phone": "",
+    "owner_1_email": "",
 
     "owner_2_name": "w1gXDYOSjFd8cojlww4v",
     "owner_2_fico": "",
@@ -121,6 +130,6 @@
     "owner_2_state": "",
     "owner_2_zip": "",
     "owner_2_phone": { "source": "", "format": "phone" },
-    "owner_2_email": "xCUKxj3VNvMR2pvq7col"
+    "owner_2_email": ""
   }
 }

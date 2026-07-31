@@ -99,6 +99,10 @@ async function generate(contactId, { force = false, deliver = true, payload = nu
   // Anything the webhook sent explicitly wins over the field map.
   Object.assign(data, overrides);
 
+  // ...except the blank list, which is enforced last so no source — map,
+  // standard property, or webhook Custom Data — can populate these boxes.
+  for (const key of fieldMap.blankFields?.keys || []) data[key] = '';
+
   const pdf = await renderPdf(TEMPLATE, data);
 
   if (!deliver) return { pdf, data };
