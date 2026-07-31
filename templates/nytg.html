@@ -110,7 +110,16 @@
   }
   .sigmark { flex: 1 1 auto; display: flex; align-items: flex-end; overflow: hidden; }
   .sigmark img { max-height: 30px; max-width: 96%; }
-  .sigmark svg.sigscribble { height: 30px; width: auto; max-width: 96%; overflow: visible; }
+  /* Explicit width AND height: an inline SVG with width:auto inside a flex
+     container can compute to zero in Chromium, which renders nothing at all
+     with no error. 230x58 viewBox scaled to fit the box. */
+  .sigmark svg.sigscribble {
+    width: 119px;
+    height: 30px;
+    flex: 0 0 auto;
+    display: block;
+    overflow: visible;
+  }
   .sigmark img[src=""] { display: none; }
   .sigscript {
     font-family: "SignatureScript", "Liberation Serif", cursive;
