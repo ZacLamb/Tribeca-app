@@ -66,11 +66,19 @@ function escapeHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+// These carry markup or base64 and must not be HTML-escaped.
+const RAW_KEYS = new Set([
+  'signature_font_data',
+  'signature_1_scribble',
+  'signature_2_scribble',
+]);
+
 /** {{key}} substitution. Unknown keys render blank rather than leaving braces. */
 function interpolate(html, data) {
-  return html.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, key) =>
-    escapeHtml(data[key] ?? '')
-  );
+  return html.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, key) => {
+    const v = data[key] ?? '';
+    return RAW_KEYS.has(key) ? String(v) : escapeHtml(v);
+  });
 }
 
 async function renderPdf(templateName, data) {

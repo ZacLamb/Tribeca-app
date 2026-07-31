@@ -31,6 +31,7 @@
       "typed fallback when no signature image exists."
     ],
     "mode": "auto",
+    "style": "scribble",
     "requireConsent": true,
     "owner1": {
       "nameSource": "owner_1_name",
@@ -108,7 +109,7 @@
     "owner_1_state": "std:state",
     "owner_1_zip": "std:postalCode",
     "owner_1_phone": { "source": ["std:phone", "RNqyHddDD9I8wclkk6Ov"], "mode": "first", "format": "phone" },
-    "owner_1_email": "std:email",
+    "owner_1_email": { "source": ["std:email", "mRQBl0SVsGL56KrsKhrB"], "mode": "first" },
 
     "owner_2_name": "w1gXDYOSjFd8cojlww4v",
     "owner_2_fico": "",

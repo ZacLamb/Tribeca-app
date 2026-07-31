@@ -3,7 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <style>
-  @page { size: Letter; margin: 0.4in; }
+  /* ===== PAGE FIT KNOBS =========================================
+     If the form spills to a second page, turn these down in order:
+       1. body font-size   (8.2 -> 7.8 -> 7.4)
+       2. .f .val min-height (13 -> 12 -> 11)
+       3. @page margin     (0.32 -> 0.28)
+     If there's dead space at the bottom, turn them back up.
+     ============================================================== */
+  @page { size: Letter; margin: 0.32in; }
 
   * { box-sizing: border-box; }
 
@@ -15,11 +22,11 @@
   }
 
   /* ---- masthead ---- */
-  .brand { text-align: center; margin-bottom: 4px; }
+  .brand { text-align: center; margin-bottom: 2px; }
   .brand img { height: 46px; }
   .brand .wordmark {
     font-family: "Liberation Serif", Georgia, serif;
-    font-size: 21pt;
+    font-size: 19pt;
     letter-spacing: 0.5px;
   }
   .contactbar {
@@ -27,7 +34,7 @@
     justify-content: space-between;
     font-family: "Liberation Serif", Georgia, serif;
     font-size: 8.5pt;
-    margin: 2px 2px 8px 2px;
+    margin: 1px 2px 5px 2px;
   }
   .contactbar div { line-height: 1.35; }
   .contactbar .mid { text-align: center; }
@@ -38,7 +45,7 @@
     width: 100%;
     border-collapse: collapse;
     border: 1.2px solid #000;
-    margin-bottom: 7px;
+    margin-bottom: 4px;
     table-layout: fixed;
   }
   table.sec td, table.sec th { border: 1px solid #000; padding: 0; vertical-align: top; }
@@ -56,7 +63,7 @@
   .f { padding: 0; }
   .f .lbl {
     font-weight: bold;
-    padding: 2px 4px 1px 4px;
+    padding: 1px 4px 1px 4px;
     /* Labels must wrap — the qualifying-question headings are long enough to
        be silently clipped at these column widths otherwise. */
     white-space: normal;
@@ -65,8 +72,8 @@
   }
   .f .val {
     background: #DEEAF6;
-    min-height: 15px;
-    padding: 1px 4px 2px 4px;
+    min-height: 13px;
+    padding: 1px 4px 1px 4px;
     font-weight: normal;
     word-wrap: break-word;
   }
@@ -75,16 +82,16 @@
 
   /* inline label-left / value-right variant, used in the AM block */
   .row { display: flex; }
-  .row .lbl { font-weight: bold; padding: 2px 4px; flex: 0 0 46%; }
-  .row .val { background: #DEEAF6; flex: 1 1 auto; padding: 2px 4px; min-height: 15px; }
+  .row .lbl { font-weight: bold; padding: 1px 4px; flex: 0 0 46%; }
+  .row .val { background: #DEEAF6; flex: 1 1 auto; padding: 1px 4px; min-height: 13px; }
 
   .auth {
-    padding: 3px 5px;
-    font-size: 7pt;
-    line-height: 1.28;
+    padding: 2px 5px;
+    font-size: 6.6pt;
+    line-height: 1.22;
     text-align: justify;
   }
-  .sig .val { min-height: 52px; position: relative; }
+  .sig .val { min-height: 42px; position: relative; }
   .sig .lbl.italic { font-style: italic; font-weight: bold; }
 
   /* ---- signatures ---- */
@@ -98,16 +105,17 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    height: 52px;
-    padding: 2px 4px 1px 4px;
+    height: 42px;
+    padding: 1px 4px 1px 4px;
   }
   .sigmark { flex: 1 1 auto; display: flex; align-items: flex-end; overflow: hidden; }
-  .sigmark img { max-height: 40px; max-width: 96%; }
+  .sigmark img { max-height: 30px; max-width: 96%; }
+  .sigmark svg.sigscribble { height: 30px; width: auto; max-width: 96%; overflow: visible; }
   .sigmark img[src=""] { display: none; }
   .sigscript {
     font-family: "SignatureScript", "Liberation Serif", cursive;
-    font-size: 20pt;
-    line-height: 1.05;
+    font-size: 17pt;
+    line-height: 1.02;
     padding-bottom: 1px;
   }
   .sigmeta {
@@ -121,13 +129,13 @@
   .sigmeta:empty { border-top: none; }
 
   .returnnote {
-    padding: 6px 8px;
+    padding: 3px 8px;
     text-align: center;
     text-align-last: center;
     font-family: "Liberation Serif", Georgia, serif;
     font-weight: bold;
-    font-size: 9.5pt;
-    line-height: 1.35;
+    font-size: 8.8pt;
+    line-height: 1.25;
   }
 </style>
 </head>
@@ -296,6 +304,7 @@
           <div class="sigbox">
             <div class="sigmark">
               <img src="{{signature_1_image}}" alt="" />
+              {{signature_1_scribble}}
               <span class="sigscript">{{signature_1_typed}}</span>
             </div>
             <div class="sigmeta">{{signature_1_meta}}</div>
@@ -308,6 +317,7 @@
           <div class="sigbox">
             <div class="sigmark">
               <img src="{{signature_2_image}}" alt="" />
+              {{signature_2_scribble}}
               <span class="sigscript">{{signature_2_typed}}</span>
             </div>
             <div class="sigmeta">{{signature_2_meta}}</div>

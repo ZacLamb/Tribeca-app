@@ -20,6 +20,7 @@
  */
 
 const fieldMap = require('../config/fields.json');
+const { makeScribble } = require('./scribble');
 
 function cfValue(contact, id) {
   if (!id) return '';
@@ -74,7 +75,7 @@ function usDate(d) {
 }
 
 async function resolveOne(contact, cfg, fallbackName, data) {
-  const out = { image: '', typed: '', meta: '', date: '' };
+  const out = { image: '', typed: '', scribble: '', meta: '', date: '' };
   if (!cfg) return out;
 
   const mode = (process.env.SIGNATURE_MODE || fieldMap.signature?.mode || 'auto').toLowerCase();
@@ -108,7 +109,7 @@ async function resolveOne(contact, cfg, fallbackName, data) {
     if (mode === 'image') return out; // explicit image mode, no fabricating
   }
 
-  // --- typed path
+  // --- generated path (scribble or script text)
   if (mode === 'auto' || mode === 'typed') {
     const consented = cfg.consentFieldId ? isTruthy(cfValue(contact, cfg.consentFieldId)) : false;
     if (requireConsent && !consented) {
@@ -117,7 +118,13 @@ async function resolveOne(contact, cfg, fallbackName, data) {
       );
       return out;
     }
-    out.typed = name;
+
+    const style = (process.env.SIGNATURE_STYLE || fieldMap.signature?.style || 'scribble')
+      .toLowerCase();
+
+    if (style === 'scribble' || style === 'both') out.scribble = makeScribble(name);
+    if (style === 'script' || style === 'both') out.typed = name;
+
     out.date = usDate(when);
     out.meta = `Electronically signed by ${name} on ${usDate(when)}`;
     if (cfg.consentSourceLabel) out.meta += ` — ${cfg.consentSourceLabel}`;
@@ -133,11 +140,13 @@ async function applySignatures(contact, data) {
   const two = await resolveOne(contact, cfg.owner2, data.owner_2_name, data);
 
   data.signature_1_image = one.image;
+  data.signature_1_scribble = one.scribble;
   data.signature_1_typed = one.typed;
   data.signature_1_meta = one.meta;
   data.signature_1_date = one.date;
 
   data.signature_2_image = two.image;
+  data.signature_2_scribble = two.scribble;
   data.signature_2_typed = two.typed;
   data.signature_2_meta = two.meta;
   data.signature_2_date = two.date;
