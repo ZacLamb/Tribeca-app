@@ -127,7 +127,10 @@ async function resolveOne(contact, cfg, fallbackName, data) {
 
     out.date = usDate(when);
     out.meta = `Electronically signed by ${name} on ${usDate(when)}`;
-    if (cfg.consentSourceLabel) out.meta += ` — ${cfg.consentSourceLabel}`;
+    // Only cite the consent source when there actually is one. With the gate
+    // off, appending it anyway would print a claim about a record that doesn't
+    // exist on the contact.
+    if (consented && cfg.consentSourceLabel) out.meta += ` — ${cfg.consentSourceLabel}`;
   }
 
   return out;

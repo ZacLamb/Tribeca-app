@@ -41,7 +41,7 @@
     ],
     "mode": "auto",
     "style": "scribble",
-    "requireConsent": true,
+    "requireConsent": false,
     "owner1": {
       "nameSource": "owner_1_name",
       "imageFieldId": "XqNel8V8gW5a29bWPyRJ",
